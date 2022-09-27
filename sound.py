@@ -1,16 +1,19 @@
+
 import pygame
 import sys
 
-pygame.init()
 
 screen = pygame.display.set_mode((700, 700))
-
-pygame.mixer.init()
-air = "F:\!Python\cosmomedley\Medley-Air.ogg"
-charango = "F:\!Python\cosmomedley\Medley-Charango.ogg"
-drums = "F:\!Python\cosmomedley\Medley-Drums.ogg"
-flute = "F:\!Python\cosmomedley\Medley-Flute.ogg"
-horn = "F:\!Python\cosmomedley\Medley-Horn.ogg"
+pygame.mixer.pre_init(44100, -16, 2, 512)
+pygame.mixer.init(44100, -16, 2, 512)
+pygame.init()
+air = "F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\Medley-Air.ogg"
+charango = "F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\Medley-Charango.ogg"
+drums = "F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\Medley-Drums.ogg"
+flute = "F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\Medley-Flute.ogg"
+horn = "F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\Medley-Horn.ogg"
+FPS=10
+BACKGROUND_COLOR = pygame.Color('#82a67d') #The background colod of our window
 
 
 pygame.mixer.Channel(0).set_volume(0)
@@ -24,6 +27,51 @@ pygame.mixer.Channel(0).play(pygame.mixer.Sound(air), -1)
 pygame.mixer.Channel(1).play(pygame.mixer.Sound(charango), -1)
 pygame.mixer.Channel(2).play(pygame.mixer.Sound(drums), -1)
 pygame.mixer.Channel(4).play(pygame.mixer.Sound(horn), -1)
+
+class MySprite(pygame.sprite.Sprite):
+    def __init__(self):
+        super(MySprite, self).__init__()
+ 
+        self.images = []
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0001.png'))
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0002.png'))
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0003.png'))
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0004.png'))
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0005.png'))
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0006.png'))
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0007.png'))
+        self.images.append(pygame.image.load(r'F:\!Python\!Python-20220924T190322Z-001\!Python\cosmo\frog_horn\Timeline 1_0008.png'))
+
+        self.index = 0
+        self.image = self.images[self.index]
+ 
+        self.rect = pygame.Rect(5, 5, 100, 100)
+ 
+    def update(self):
+        self.index += 1
+ 
+        if self.index >= len(self.images):
+            self.index = 0
+        
+        self.image = self.images[self.index]
+
+def main():
+    my_sprite = MySprite()
+    my_group = pygame.sprite.Group(my_sprite)
+    clock = pygame.time.Clock()
+ 
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+ 
+        my_group.update()
+        screen.fill(BACKGROUND_COLOR)
+        my_group.draw(screen)
+        pygame.display.update()
+        clock.tick(10)
+
 
 def button(screen, position, text, size, colors="white on blue"):
     fg, bg = colors.split(" on ")
@@ -42,31 +90,22 @@ def button(screen, position, text, size, colors="white on blue"):
  
 def play_air():
     pygame.mixer.Channel(0).set_volume(0.5)
-
 def play_charingo():
     pygame.mixer.Channel(1).set_volume(0.5)
-
 def play_drums():
     pygame.mixer.Channel(2).set_volume(0.5)
-
 def play_flute():
     pygame.mixer.Channel(3).set_volume(0.5)
-
 def play_horn():
     pygame.mixer.Channel(4).set_volume(0.5)
-
 def stop_air():
     pygame.mixer.Channel(0).set_volume(0)
-
 def stop_charingo():
     pygame.mixer.Channel(1).set_volume(0)
-
 def stop_drums():
     pygame.mixer.Channel(2).set_volume(0)
-
 def stop_flute():
     pygame.mixer.Channel(3).set_volume(0)
-
 def stop_horn():
     pygame.mixer.Channel(4).set_volume(0)
 
@@ -97,6 +136,8 @@ def menu():
                 if quit_b.collidepoint(pygame.mouse.get_pos()):
                     pygame.quit()
 # Start section
+                elif b0.collidepoint(pygame.mouse.get_pos()):
+                    main()
                 elif air_b_on.collidepoint(pygame.mouse.get_pos()):
                     play_air()
                     air_b_on = button(screen, (700, 700), "Air", 50, "white on blue")
@@ -139,5 +180,7 @@ def menu():
                     horn_b_off = button(screen, (700, 700), "Horn", 50, "white on blue")
         pygame.display.update()
     pygame.quit()
- 
+
 menu()
+
+ 
